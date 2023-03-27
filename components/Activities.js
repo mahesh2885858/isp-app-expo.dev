@@ -7,11 +7,12 @@ import { useContext } from 'react';
 
 import { RNCONTROL_API_BASE_URL } from '../lib/Constants';
 import axios from 'axios';
+import DeviceData from './test';
 
 const Activities = ({ navigation }) => {
     const [jwt, setJwt] = useState("")
 
-    const { Logout } = useContext(Context)
+    const { Logout, setDeviceDetails } = useContext(Context)
 
 
 
@@ -32,17 +33,14 @@ const Activities = ({ navigation }) => {
                 headers: { "Authorization": `Bearer ${jwt}` }
             }).then(res => res.json())
                 .then(json => {
-                    console.log('Data Loaded');
-                    //console.log(json);
                     let REPLY = json.REPLY;
-
                     let connected_hosts = REPLY.connected_hosts
-                    console.log(REPLY);
-                    console.log(connected_hosts);
+                    console.log("activity", connected_hosts);
+                    setDeviceDetails(connected_hosts)
+
 
                 })
                 .catch((err) => console.log(err));
-
 
 
         }
