@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import { View, Text, StatusBar, SafeAreaView, Image } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text } from 'react-native'
+import React from 'react'
 import LoginPage from './components/Login'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,7 +11,6 @@ import ContextProvider from './utils/context';
 import Activities from "./components/Activities"
 import Devices from './components/Devices';
 import Networks from './components/Networks';
-import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import Menu from "./assets/icons/menu.svg"
 import Home from "./assets/icons/home.svg"
 import HomeActive from "./assets/icons/home-active.svg"
