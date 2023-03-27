@@ -72,7 +72,6 @@ const OtpPage = ({ navigation }) => {
             url: `${API_URL}`,
         }).then((response) => {
 
-            console.log(response.data);
 
             if (response.data.ERROR === '' && response.data.RESULT === 'SUCCESS') {
 
