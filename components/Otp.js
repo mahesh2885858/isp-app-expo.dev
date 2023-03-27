@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -19,17 +19,53 @@ import { Context } from '../utils/context';
 import * as SecureStore from 'expo-secure-store';
 
 const OtpPage = ({ navigation }) => {
-    const [otp, setOtp] = useState({ 1: "", 2: "", 3: "", 4: "" });
-    const [isLoading, setIsLoading] = useState(false)
-    const box1Ref = useRef(null);
-    const box2Ref = useRef(null);
-    const box3Ref = useRef(null);
-    const box4Ref = useRef(null);
+    const [code, setCode] = useState(["", "", "", ""]);
+    const box1Ref = useRef(null)
+    const box2Ref = useRef(null)
+    const box3Ref = useRef(null)
+    const box4Ref = useRef(null)
+    const boxAray = [box1Ref, box2Ref, box3Ref, box4Ref]
+    const [currentIndex, setCurrentIndex] = useState(0)
     const { email, setJwt } = useContext(Context)
-    const otpVerify = () => {
+    useEffect(() => {
+        boxAray[currentIndex].current.focus()
+    }, [currentIndex]);
 
-        let parsedOtp = parseInt(otp[1] + otp[2] + otp[3] + otp[4])
-        const API_URL = RNCONTROL_API_BASE_URL + '/jwt_step_2.php?EMAIL=' + email + '&CODE=' + parsedOtp;
+    const handleInputChange = (value) => {
+        if (!value) return
+        setCode((prevCode) => {
+            if (currentIndex <= 3) {
+                const newCode = [...prevCode]
+                newCode[currentIndex] = value
+                return newCode
+            } else {
+                return prevCode
+            }
+        });
+        setCurrentIndex((prevIndex) => {
+            if (prevIndex < 3) return prevIndex + 1
+            return prevIndex
+        })
+    };
+
+    const handleBackspace = () => {
+        if (currentIndex === 0 && code[currentIndex] === "") return
+        if (currentIndex >= 0 && code[currentIndex]) {
+            setCode((prevCode) => {
+                const newCode = [...prevCode]
+                newCode[currentIndex] = ""
+                return newCode
+            });
+        } else if (currentIndex > 0 && !(code[currentIndex])) {
+            setCurrentIndex((prevIndex) => {
+                return prevIndex - 1
+            })
+        }
+    }
+    const handleSubmit = () => {
+        // send the code to an API for validation
+        const parsedCode = parseInt(code.join(''))
+        const API_URL = RNCONTROL_API_BASE_URL + '/jwt_step_2.php?EMAIL=' + email + '&CODE=' + parsedCode;
 
         axios({
             method: 'get',
@@ -55,9 +91,8 @@ const OtpPage = ({ navigation }) => {
             }
 
         });
+    };
 
-
-    }
 
     return (
         <SafeAreaView>
@@ -75,51 +110,52 @@ const OtpPage = ({ navigation }) => {
                     }} >
 
                         <TextInput
-                            ref={box1Ref}
-                            style={styles.input}
-                            maxLength={1}
+                            ref={boxAray[0]}
+                            value={code[0]}
+                            style={styles.codeInput}
                             keyboardType="numeric"
-                            onChangeText={(text) => {
-                                setOtp({ ...otp, 1: text })
-                                text && box2Ref.current.focus()
-                            }}
+                            maxLength={1}
+                            onChangeText={(value) => handleInputChange(value)}
+                            onKeyPress={({ nativeEvent }) =>
+                                nativeEvent.key === 'Backspace' && handleBackspace()
+                            }
                         />
                         <TextInput
-                            ref={box2Ref}
-                            style={styles.input}
-                            maxLength={1}
+                            ref={boxAray[1]}
+                            value={code[1]}
+                            style={styles.codeInput}
                             keyboardType="numeric"
-                            onChangeText={(text) => {
-                                setOtp({ ...otp, 2: text })
-
-                                text ? box3Ref.current.focus() : box1Ref.current.focus()
-                            }}
+                            maxLength={1}
+                            onChangeText={(value) => handleInputChange(value)}
+                            onKeyPress={({ nativeEvent }) =>
+                                nativeEvent.key === 'Backspace' && handleBackspace()
+                            }
                         />
                         <TextInput
-                            ref={box3Ref}
-                            style={styles.input}
-                            maxLength={1}
+                            ref={boxAray[2]}
+                            value={code[2]}
+                            style={styles.codeInput}
                             keyboardType="numeric"
-                            onChangeText={(text) => {
-                                setOtp({ ...otp, 3: text })
-
-                                text ? box4Ref.current.focus() : box2Ref.current.focus()
-                            }}
+                            maxLength={1}
+                            onChangeText={(value) => handleInputChange(value)}
+                            onKeyPress={({ nativeEvent }) =>
+                                nativeEvent.key === 'Backspace' && handleBackspace()
+                            }
                         />
                         <TextInput
-                            ref={box4Ref}
-                            style={styles.input}
-                            maxLength={1}
+                            ref={boxAray[3]}
+                            value={code[3]}
+                            style={styles.codeInput}
                             keyboardType="numeric"
-                            onChangeText={(text) => {
-                                setOtp({ ...otp, 4: text })
-
-                                !text && box3Ref.current.focus()
-                            }}
+                            maxLength={1}
+                            onChangeText={(value) => handleInputChange(value)}
+                            onKeyPress={({ nativeEvent }) =>
+                                nativeEvent.key === 'Backspace' && handleBackspace()
+                            }
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.submitButton} onPress={otpVerify}>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
 
                         <Text style={{ color: "white", fontWeight: 700 }} >Verify</Text>
                     </TouchableOpacity>
@@ -128,6 +164,7 @@ const OtpPage = ({ navigation }) => {
         </SafeAreaView>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -141,27 +178,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 40
     },
-
-    input: {
-
-
-        borderColor: '#E5E5E5',
+    codeInput: {
         borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: 5,
+        fontSize: 18,
+        padding: 10,
+        marginHorizontal: 5,
+        textAlign: 'center',
         width: 50,
-        height: 50,
-        textAlign: "center",
-        fontSize: 20
     },
     submitButton: {
-        width: "75%",
-        padding: 10,
-        alignItems: "center",
-        justifyContent: "center",
+        marginTop: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         backgroundColor: "#0D83C5",
-        borderRadius: 5
-    }
+        borderRadius: 5,
+    },
+
 
 });
 
 
 export default OtpPage
+
+
+
+

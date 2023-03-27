@@ -15,7 +15,7 @@ const ContextProvider = ({ children }) => {
         SecureStore.deleteItemAsync("jwt").then((res) => {
             setEmail('')
             setJwt('')
-            navigation.navigate("Login")
+            navigation.replace("Login")
         }).catch((err) => {
             console.log('CONTEXT:')
             console.log(err)
