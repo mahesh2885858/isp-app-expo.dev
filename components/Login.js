@@ -49,7 +49,7 @@ const LoginPage = ({ navigation }) => {
                 navigation.replace('OtpValidate');
 
             } else if (response.data.ERROR !== '') {
-                alert('Something went wrong');
+                alert(response.data.ERROR);
             }
 
         });
