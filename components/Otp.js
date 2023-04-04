@@ -16,7 +16,6 @@ import { Context } from "../utils/context";
 
 import * as SecureStore from "expo-secure-store";
 import DeviceData from "./test";
-
 const OtpPage = ({ navigation }) => {
   const [code, setCode] = useState(["", "", "", ""]);
   const box1Ref = useRef(null);
@@ -25,7 +24,8 @@ const OtpPage = ({ navigation }) => {
   const box4Ref = useRef(null);
   const boxAray = [box1Ref, box2Ref, box3Ref, box4Ref];
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { email, setJwt, setDeviceDetails } = useContext(Context);
+  const { email, setEmail, jwt, setJwt, setDeviceDetails } =
+    useContext(Context);
   useEffect(() => {
     boxAray[currentIndex].current.focus();
   }, [currentIndex]);
@@ -76,7 +76,13 @@ const OtpPage = ({ navigation }) => {
       url: `${API_URL}`,
     }).then((response) => {
       if (response.data.ERROR === "" && response.data.RESULT === "SUCCESS") {
+        setEmail(email);
         setJwt(response.data.JWT);
+
+        SecureStore.setItemAsync("email", email)
+          .then((res) => {})
+          .catch(() => {});
+
         SecureStore.setItemAsync("jwt", response.data.JWT)
           .then((res) => {
             navigation.replace(ROUTES.MY_ACCOUNT.HOME);
@@ -156,7 +162,7 @@ const OtpPage = ({ navigation }) => {
             <Text style={{ color: "white", fontWeight: 700 }}>Verify</Text>
           </TouchableOpacity>
           <View style={styles.message}>
-            <Text style={{ color: "green" }}>
+            <Text style={styles.messageText}>
               We emailed a four digit code. Please enter it here, to complete
               your login
             </Text>
@@ -199,11 +205,19 @@ const styles = StyleSheet.create({
   message: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    borderColor: "#66686a7a",
-    borderWidth: 1,
-    padding: 4,
-    marginTop: 30,
+
+    // borderRadius: 10,
+    // borderColor: "#66686a7a",
+    // borderWidth: 1,
+
+    padding: 0, //4,
+    marginTop: 0, //30,
+
+    marginHorizontal: 40,
+  },
+  messageText: {
+    color: "black",
+    textAlign: "center",
   },
 });
 

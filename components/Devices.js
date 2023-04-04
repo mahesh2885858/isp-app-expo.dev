@@ -17,6 +17,7 @@ import { ROUTES } from "../lib/Constants";
 import { RNCONTROL_API_BASE_URL } from "../lib/Constants";
 
 import * as SecureStore from "expo-secure-store";
+
 const Devices = ({ navigation }) => {
   const { devicesDetails, setDeviceDetails, Logout, jwt } = useContext(Context);
   const activeDevices = devicesDetails.reduce((pre, cur) => {
@@ -47,7 +48,7 @@ const Devices = ({ navigation }) => {
         .then((res) => res.json())
         .then((json) => {
           let REPLY = json.REPLY;
-          console.log({ REPLY });
+          //console.log({ REPLY });
           let connected_hosts = REPLY.connected_hosts;
           setDeviceDetails(connected_hosts);
         })
@@ -66,10 +67,24 @@ const Devices = ({ navigation }) => {
           if (!(device.interface === "Inactive")) {
             return (
               <View key={device.ip_address} style={styles.device}>
-                {device.host_name === "Chromecast" ? <TvIcon /> : <Mobile />}
-                <View>
-                  <Text>{device.host_name}</Text>
-                  <Text>Connected to {device.ip_address}</Text>
+                <View style={styles.deviceDescription}>
+                  <View
+                    style={{
+                      width: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {device.host_name === "Chromecast" ? (
+                      <TvIcon />
+                    ) : (
+                      <Mobile />
+                    )}
+                  </View>
+                  <View>
+                    <Text>{device.host_name}</Text>
+                    <Text>{device.ip_address}</Text>
+                  </View>
                 </View>
                 {/*
                                     <Pressable>
@@ -77,7 +92,7 @@ const Devices = ({ navigation }) => {
                                     </Pressable>
                                     */}
                 <Pressable onPress={() => GoToDevicePage(device)}>
-                  <Arrow />
+                  <Arrow width={50} height={20} />
                 </Pressable>
               </View>
             );
@@ -91,14 +106,28 @@ const Devices = ({ navigation }) => {
           if (device.interface === "Inactive") {
             return (
               <View key={device.ip_address} style={styles.device}>
-                <Mobile></Mobile>
-                <View>
-                  <Text>{device.host_name}</Text>
-                  <Text>Connected to {device.ip_address}</Text>
+                <View style={styles.deviceDescription}>
+                  <View
+                    style={{
+                      width: 20,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {device.host_name === "Chromecast" ? (
+                      <TvIcon />
+                    ) : (
+                      <Mobile />
+                    )}
+                  </View>
+                  <View>
+                    <Text>{device.host_name}</Text>
+                    <Text>{device.ip_address}</Text>
+                  </View>
                 </View>
-                <TouchableOpacity onPress={() => GoToDevicePage(device)}>
-                  <Arrow />
-                </TouchableOpacity>
+                <Pressable onPress={() => GoToDevicePage(device)}>
+                  <Arrow width={50} height={20} />
+                </Pressable>
               </View>
             );
           }
@@ -132,6 +161,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     paddingVertical: 5,
+  },
+  deviceDescription: {
+    flexDirection: "row",
+    minWidth: 250,
+    // change the gap to change margin between icon and hostname
+    gap: 30,
   },
 });
 export default Devices;

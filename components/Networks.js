@@ -27,7 +27,7 @@ const Networks = ({ navigation }) => {
 
     const { Logout } = useContext(Context)
 
-
+const [mainConfigDetails, setMainConfigDetails] = useState([]);
 
 
     useEffect(() => {
@@ -53,7 +53,8 @@ const Networks = ({ navigation }) => {
                     let main_config = REPLY.main_config
                     //console.log(REPLY); 
                     console.log(main_config);
-                    alert(main_config.length);
+                    setMainConfigDetails(main_config);
+                    //alert(main_config.length);
 
                 })
                 .catch((err) => console.log(err));
@@ -102,7 +103,7 @@ const Networks = ({ navigation }) => {
         //console.log(response.data);
         let resp = response.data;
         
-        if(resp.connected_hosts !== undefined) {
+        if(resp.connected_hosts  !== undefined) {
            let connected_hosts = resp.connected_hosts;
         } else {
             alert('device data (connected hosts) is empty')
@@ -112,15 +113,23 @@ const Networks = ({ navigation }) => {
         //console.log(connected_hosts.usage_down);
     });*/
 
+        return(
 
-    return (
-        <View>
+            <View>
             <Text>NETWORKS</Text>
-            <TouchableOpacity onPress={Logout}>
-                <Text>Logout</Text>
-            </TouchableOpacity>
-        </View>
-    )
+            <Text>Total : {mainConfigDetails.length}</Text>
+
+            {mainConfigDetails.map((item, i) => {
+                return(
+                <Text>{item.item_id}). {item.name}</Text>
+                )
+            })}
+
+          </View>
+
+        )
+
+
 }
 
 export default Networks

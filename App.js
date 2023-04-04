@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { View, Text, StatusBar, SafeAreaView, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoginPage from "./components/Login";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -40,6 +40,7 @@ import MyAccountIcon from "./assets/icons/myaccount.svg";
 import MyAccountActiveIcon from "./assets/icons/myaccount-active.svg";
 import InternetActiveIcon from "./assets/icons/internet-active.svg";
 import { ROUTES } from "./lib/Constants";
+
 const Stack = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator();

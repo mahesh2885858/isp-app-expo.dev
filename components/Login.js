@@ -6,33 +6,53 @@ import {
   TextInput,
   Text,
   Image,
-  TouchableOpacity,
+  TouchableOpacity, 
 } from "react-native";
 import { Context } from "../utils/context";
 import { useContext } from "react";
 import IsphelperLogo from "../assets/ispHelperLogo.svg";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { RNCONTROL_API_BASE_URL } from "../lib/Constants";
-import { ROUTES } from "../lib/Constants";
+import { RNCONTROL_API_BASE_URL, ROUTES } from "../lib/Constants";
+
+//import jwtDecode from "jwt-decode";
 
 const LoginPage = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { email, setEmail } = useContext(Context);
-  // useEffect(() => {
+  const { email, setEmail, jwt, SetJwt, checkAndRenewJWT } = useContext(Context);
 
-  //     SecureStore.getItemAsync("jwt").then((res) => {
-  //         if (jwt) {
+  /*
+  useEffect(() => {
 
-  //             navigation.replace("Dashboard")
-  //         } else {
-  //             throw "No jwt found please login again"
-  //         }
-  //     }).catch((err) => {
-  //         alert(err.message)
-  //         return
-  //     })
-  // }, [])
+      SecureStore.getItemAsync("jwt").then((res) => {
+          if (res) {
+              //navigation.replace("Dashboard")
+              console.log(res);
+
+              //WILL CHECK WHETHER THE TOKEN IS ACTIVE OR NOT. IF NOT NEED TO RENEW AND STORE IT in jwt AND REDIRECT. OTHERWISE REDIRECT TO LOGIN
+              navigation.navigate(ROUTES.MY_ACCOUNT.HOME);
+
+          } else {
+              //throw "No jwt found please login again"
+          }
+      }).catch((err) => {
+          //alert(err.message)
+          //return
+      })
+  }, [])
+  */
+
+
+
+useEffect(() => {
+  console.log('checkAndRenewJWT() called');
+  checkAndRenewJWT();
+
+}, []);
+
+
+
+
   const onLogin = () => {
     const API_URL = RNCONTROL_API_BASE_URL + "/jwt_step_1.php?EMAIL=" + email;
 
