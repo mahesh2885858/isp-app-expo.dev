@@ -16,6 +16,7 @@ import { Context } from "../utils/context";
 
 import * as SecureStore from "expo-secure-store";
 import DeviceData from "./test";
+
 const OtpPage = ({ navigation }) => {
   const [code, setCode] = useState(["", "", "", ""]);
   const box1Ref = useRef(null);
@@ -77,7 +78,7 @@ const OtpPage = ({ navigation }) => {
     }).then((response) => {
       if (response.data.ERROR === "" && response.data.RESULT === "SUCCESS") {
         setEmail(email);
-        setJwt(response.data.JWT);
+        setJwt(response.data.JWT);     
 
         SecureStore.setItemAsync("email", email)
           .then((res) => {})

@@ -41,6 +41,9 @@ import MyAccountActiveIcon from "./assets/icons/myaccount-active.svg";
 import InternetActiveIcon from "./assets/icons/internet-active.svg";
 import { ROUTES } from "./lib/Constants";
 
+import SpeedTest from "./components/SpeedTest";
+import TroubleshootADevice from "./components/TroubleshootADevice";
+
 const Stack = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -60,6 +63,28 @@ function DevicesStack() {
     </Stack.Navigator>
   );
 }
+
+// added by mahesh
+function NetwrokStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ROUTES.MY_ACCOUNT.MY_ROUTER.NETWORK.NETWORK_PAGE}
+        component={Networks}
+      />
+
+      <Stack.Screen
+        name={ROUTES.MY_ACCOUNT.MY_ROUTER.NETWORK.SPEEDTEST}
+        component={SpeedTest}
+      />
+      <Stack.Screen
+        name={ROUTES.MY_ACCOUNT.MY_ROUTER.NETWORK.TROUBLESHOOT_A_DEVICE}
+        component={TroubleshootADevice}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -79,8 +104,8 @@ function MyTabs() {
       />
 
       <Tab.Screen
-        name={ROUTES.MY_ACCOUNT.MY_ROUTER.NETWORK}
-        component={Networks}
+        name={ROUTES.MY_ACCOUNT.MY_ROUTER.NETWORK.HOME}
+        component={NetwrokStack}
         options={{
           tabBarIcon: ({ focused, color }) =>
             focused ? (
@@ -90,6 +115,7 @@ function MyTabs() {
             ),
         }}
       />
+
       <Tab.Screen
         name={ROUTES.MY_ACCOUNT.MY_ROUTER.HELP}
         component={Activities}
@@ -128,10 +154,10 @@ function MyDrawer() {
         headerStyle: {
           backgroundColor: "#0D82C4",
         },
-
+        headerTitleAlign: "center",
         headerLeft: () => (
           <Menu
-            style={{ marginLeft: 30 }}
+            style={{ marginLeft: 10 }}
             onPress={navigation.toggleDrawer}
             width={34}
             height={34}

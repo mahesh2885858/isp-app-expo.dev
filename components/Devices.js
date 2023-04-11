@@ -7,7 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../utils/context";
 //import PasueButton from "../assets/icons/Pausebutton.svg"
 import Arrow from "../assets/icons/Arrow 5.svg";
@@ -39,20 +39,32 @@ const Devices = ({ navigation }) => {
       usage_up: device.usage_up,
     });
   };
+
+
+
   useEffect(() => {
     const getData = () => {
+      //alert(jwt)
       fetch(RNCONTROL_API_BASE_URL + "/get.php", {
         method: "POST",
         headers: { Authorization: `Bearer ${jwt}` },
       })
         .then((res) => res.json())
         .then((json) => {
-          let REPLY = json.REPLY;
-          //console.log({ REPLY });
-          let connected_hosts = REPLY.connected_hosts;
-          setDeviceDetails(connected_hosts);
+
+          if(json.REPLY === undefined) {
+            console.log('Devices page : Data NOT retrieved');
+          }
+          else {
+            let REPLY = json.REPLY;
+            console.log('Devices page : Data retrieved');
+            setDeviceDetails(REPLY.connected_hosts);    
+          }      
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log('Devices page data fetching : ERROR');
+          console.log(err);
+        });
     };
     getData();
   }, []);
@@ -64,7 +76,20 @@ const Devices = ({ navigation }) => {
         </View>
 
         {devicesDetails.map((device, i) => {
-          if (!(device.interface === "Inactive")) {
+          if (device.interface !== "Inactive") {
+
+let tvDesktop = false;
+let hostName = device.host_name;
+if(device.interface==='Ethernet') {
+  tvDesktop = true;
+}
+if(hostName==='Chromecast') {
+  tvDesktop = true;
+}
+if( hostName.includes('Roku') === true ) {
+  tvDesktop = true;
+}       
+
             return (
               <View key={device.ip_address} style={styles.device}>
                 <View style={styles.deviceDescription}>
@@ -75,7 +100,7 @@ const Devices = ({ navigation }) => {
                       alignItems: "center",
                     }}
                   >
-                    {device.host_name === "Chromecast" ? (
+                    {tvDesktop === true ? (
                       <TvIcon />
                     ) : (
                       <Mobile />
@@ -104,6 +129,19 @@ const Devices = ({ navigation }) => {
 
         {devicesDetails.map((device, i) => {
           if (device.interface === "Inactive") {
+
+let tvDesktop = false;
+let hostName = device.host_name;
+if(device.interface==='Ethernet') {
+  tvDesktop = true;
+}
+if(hostName==='Chromecast') {
+  tvDesktop = true;
+}
+if( hostName.includes('Roku') === true ) {
+  tvDesktop = true;
+}              
+
             return (
               <View key={device.ip_address} style={styles.device}>
                 <View style={styles.deviceDescription}>
@@ -114,7 +152,7 @@ const Devices = ({ navigation }) => {
                       alignItems: "center",
                     }}
                   >
-                    {device.host_name === "Chromecast" ? (
+                    {tvDesktop === true ? (
                       <TvIcon />
                     ) : (
                       <Mobile />

@@ -151,16 +151,15 @@ const checkAndRenewJWT = async () => {
         console.log("Need not renew JWT. Move on with existing ones...");
 
         const resEmail = await SecureStore.getItemAsync("email");
-
         setEmail(resEmail);
-        console.log(email);
 
-        const resJwt = SecureStore.getItemAsync("jwt");
-
+        const resJwt = await SecureStore.getItemAsync("jwt");
         setJwt(resJwt);
-        console.log(jwt);
 
-        console.log("===");
+        console.log('======');
+        console.log(email);
+        console.log(jwt);
+        console.log('======');
 
         navigation.navigate(ROUTES.MY_ACCOUNT.HOME);
       }
